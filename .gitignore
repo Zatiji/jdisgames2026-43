@@ -1,0 +1,112 @@
+## Misc
+score_*.json
+
+### C# / .NET ###
+bin/
+obj/
+out/
+*.exe
+*.dll
+*.pdb
+*.db
+*.log
+*.cache
+*.diff
+*.patch
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.vscode/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Visual Studio
+*.vs/
+.vscode/
+
+# Rider / JetBrains
+.idea/
+
+# ASP.NET
+appsettings.*.json
+
+# Runtime saves
+backend/GameServer/ConfigFiles/saves/
+saves/
+
+### Node / React ###
+node_modules/
+dist/
+build/
+.cache/
+.npm/
+.pnp/
+.pnp.js
+bun.lockb
+yarn.lock
+package-lock.json
+*.tsbuildinfo
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.DS_Store
+.env
+.env.*.local
+*.local
+
+# Vite
+vite.config.ts.timestamp*
+vite.config.js.timestamp*
+
+### Python ###
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+env/
+ENV/
+.env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.coverage
+htmlcov/
+pip-wheel-metadata/
+*.egg-info/
+.eggs/
+### Godot ###
+frontend_godot/.godot/
+frontend_godot/.import/
+frontend_godot/.mono/
+frontend_godot/export.cfg
+frontend_godot/export_presets.cfg
+frontend_godot/build/
+frontend_godot/builds/
+frontend_godot/data_*/
+frontend_godot/mono_crash.*.json
+
+### VS Code ###
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+### OS files ###
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.swp
+*.swo
+*~
+backend/GameServer/ConfigFiles/admin.token
+backend/GameServer/ConfigFiles/saves_archive/*
+backend/GameServer/ConfigFiles/default-competition/*
