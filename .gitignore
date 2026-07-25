@@ -111,3 +111,6 @@ $RECYCLE.BIN/
 backend/GameServer/ConfigFiles/admin.token
 backend/GameServer/ConfigFiles/saves_archive/*
 backend/GameServer/ConfigFiles/default-competition/*
+
+.claude/
+superpowers/

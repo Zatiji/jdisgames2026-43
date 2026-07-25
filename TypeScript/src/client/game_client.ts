@@ -29,7 +29,7 @@ export class GameClient {
     this.connection = new HubConnectionBuilder()
       .withUrl(`${url}/api/hub?token=${encodeURIComponent(token)}&type=bot`)
       .withAutomaticReconnect([0, 5000, 5000, 5000, 5000])
-      .configureLogging(LogLevel.Warning)
+      .configureLogging(LogLevel.Trace)
       .build();
 
     this.connection.on("Authenticated", (...args: unknown[]) => this.onAuthenticated(...args));
