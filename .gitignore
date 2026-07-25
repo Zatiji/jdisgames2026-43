@@ -25,6 +25,7 @@ artifacts/
 # Visual Studio
 *.vs/
 .vscode/
+.DS_Store
 
 # Rider / JetBrains
 .idea/
