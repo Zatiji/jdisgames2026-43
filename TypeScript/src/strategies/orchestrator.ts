@@ -79,7 +79,9 @@ export class Orchestrator implements IStrategy {
 
     // Skip nodes known to have a structure (an extractor/pump) on them — those
     // harvest passively, so walking over to hand-gather them is wasted effort.
-    const resource = nearestResource(state, (r) => !hasKnownStructureAt(r.Position));
+    const resource = nearestResource(state, (r) => !hasKnownStructureAt(r.Position)
+        && r.CurrentAmount > 0);
+
     if (resource) {
       if (distance(bot.Position, resource.Position) <= GATHER_RANGE) {
         console.log("GATHERING NODE");
