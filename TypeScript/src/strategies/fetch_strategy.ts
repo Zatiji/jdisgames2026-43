@@ -2,7 +2,7 @@ import {
   ActionBase,
   DepositToBaseAction,
   GameState,
-  GatherNodeAction,
+  GatherNodeAction, PlaceExtractorAction,
   RespawnAction
 } from "../client/message_protocol";
 import {distance, isInventoryFull, moveTowards, nearestResource} from "../helpers/queries";
@@ -16,6 +16,7 @@ const DEPOSIT_RANGE = 1;
 export class FetchStrategy implements IStrategy {
   public getNextAction(state: GameState): ActionBase | null {
     const bot = state.Bot;
+    let returnToBase = false;
     if (!bot) {
       console.log("NO BOT")
       return null;
@@ -24,6 +25,28 @@ export class FetchStrategy implements IStrategy {
     if (bot.Health <= 0) {
       console.log("RESPAWNING")
       return new RespawnAction();
+    }
+
+    if (!state.Base) {
+      return null
+    }
+
+    // currently has any stock.
+    const resource = nearestResource(state);
+    if (!resource) {
+      return null;
+    }
+
+    if (state.Base.Position === bot.Position) {
+      returnToBase = false;
+    }
+
+    if (resource.CurrentAmount <= 0) {
+      returnToBase = true;
+    }
+
+    if (returnToBase) {
+      moveTowards(state.Base.Position, bot.Position)
     }
 
     if (isInventoryFull(bot) && state.Base) {
@@ -37,15 +60,11 @@ export class FetchStrategy implements IStrategy {
     }
 
     // Just go to whichever resource is closest, regardless of whether it
-    // currently has any stock.
-    const resource = nearestResource(state);
-    if (!resource) {
-      return null;
-    }
+
 
     if (distance(bot.Position, resource.Position) <= GATHER_RANGE) {
       console.log("GATHERING NODE")
-      return new GatherNodeAction(resource.Position);
+      return new PlaceExtractorAction(resource.Position);
     }
 
     console.log("MOVING TO RESOURCE")
