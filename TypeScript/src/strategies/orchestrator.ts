@@ -4,7 +4,7 @@ import {
   GameState,
   GatherNodeAction,
   Position,
-  RespawnAction,
+  RespawnAction, SendCompanionAction,
 } from "../client/message_protocol";
 import {
   distance,
@@ -58,6 +58,14 @@ export class Orchestrator implements IStrategy {
     }
 
     rememberVisibleStructures(state);
+
+
+    console.log("INVENTORY LENGHT: " + bot.Inventory.length)
+    for (let i = 0; i < bot.Inventory.length; i++ ) {
+      if (bot.Inventory[i].Quantity >= 50) {
+        return new SendCompanionAction();
+      }
+    }
 
     if (isInventoryFull(bot) && state.Base) {
       if (distance(bot.Position, state.Base.Position) <= DEPOSIT_RANGE) {
