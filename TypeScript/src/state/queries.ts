@@ -1,8 +1,9 @@
 import {
+  ActionBase,
   BaseInfo,
   GameState,
   InternalStructureInfo,
-  ItemStack,
+  ItemStack, MoveAction,
   PlayerInfo,
   Position,
   Resource,
@@ -19,6 +20,29 @@ export function nearestResource(
   predicate: (resource: Resource) => boolean = () => true,
 ): Resource | null {
   return nearestOf(state.VisibleResources.filter(predicate), (r) => r.Position, state.Bot?.Position);
+}
+
+export function moveTowards(
+    to: Position,
+    from: Position): ActionBase | null {
+  console.log("TO POSITION : " + JSON.stringify(to))
+  console.log("FROM POSITION: " + JSON.stringify(from))
+
+  const dx = to.X - from.X;
+  const dy = to.Y - from.Y;
+
+  if (dx === 0 && dy === 0) {
+    return null; // already there
+  }
+
+  // Close the larger gap first (produces a diagonal-ish Manhattan path)
+  if (Math.abs(dx) >= Math.abs(dy)) {
+    console.log("FIRST COMMAND SENT : " + JSON.stringify(new Position(from.X + Math.sign(dx), from.Y)))
+    return new MoveAction(new Position(from.X + Math.sign(dx), from.Y));
+  }
+
+  console.log("SECOND COMMAND SENT : " + JSON.stringify(new Position(from.X + Math.sign(dx), from.Y)))
+  return new MoveAction(new Position(from.X, from.Y + Math.sign(dy)));
 }
 
 export function nearestEnemy(state: GameState): VisiblePlayer | null {
