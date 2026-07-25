@@ -4,9 +4,7 @@ import { MoveLeftStrategy } from "./strategies/move_left_strategy";
 import { IStrategy } from "./strategies/strategy";
 import { FetchStrategy } from "./strategies/fetch_strategy";
 import { MoveAction, Position } from "./client/message_protocol";
-import {FetchStrategy} from "./strategies/fetch_strategy";
-import {MoveAction, Position} from "./client/message_protocol";
-import {GoBackToBaseStrategy} from "./strategies/goBackToBaseStrategy";
+import { GoBackToBaseStrategy } from "./strategies/goBackToBaseStrategy";
 
 export class Bot implements IBot {
 	public static readonly TOKEN = "BOTA-KfwG-Fusq-4XbQ";
