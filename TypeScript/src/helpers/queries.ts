@@ -59,6 +59,15 @@ function logObstacle(from: Position, blockedStep: Position): void {
   console.log(`OBSTACLE ON THE ${directionLabel(from, blockedStep)} OF THE BOT`);
 }
 
+// Wall-following lock for moveTowards: once we commit to a perpendicular
+// direction to skirt an obstacle, we keep going that way instead of
+// recomputing the "closest" sidestep every tick. Recomputing from scratch
+// each tick flips the sidestep sign as soon as the bot's position overshoots
+// the target on the perpendicular axis, causing it to oscillate forever
+// along a long wall instead of walking its length. Reset whenever the
+// primary direction is clear or the destination is reached.
+let avoidSign: 1 | -1 | null = null;
+
 // Movement is cardinal-only (no diagonals) and one tile per MoveAction.
 // Picks a single step from `from` toward `to`, trying the direct route
 // first and going around if that tile turns out solid (bot, structure,
@@ -71,30 +80,49 @@ export function moveTowards(
   const dy = to.Y - from.Y;
 
   if (dx === 0 && dy === 0) {
+    avoidSign = null;
     return null; // already there
   }
 
-  const primary = Math.abs(dx) >= Math.abs(dy)
+  const horizontalPrimary = Math.abs(dx) >= Math.abs(dy);
+  const primary = horizontalPrimary
     ? new Position(from.X + Math.sign(dx), from.Y)
     : new Position(from.X, from.Y + Math.sign(dy));
-  const secondary = Math.abs(dx) >= Math.abs(dy)
-    ? new Position(from.X, from.Y + Math.sign(dy))
-    : new Position(from.X + Math.sign(dx), from.Y);
 
-  // Sidesteps: go around the obstacle perpendicular to the primary axis.
-  const candidates = [
-    primary,
-    secondary,
-    Math.abs(dx) >= Math.abs(dy) ? new Position(from.X, from.Y + 1) : new Position(from.X + 1, from.Y),
-    Math.abs(dx) >= Math.abs(dy) ? new Position(from.X, from.Y - 1) : new Position(from.X - 1, from.Y),
-  ].filter((candidate) => candidate.X !== from.X || candidate.Y !== from.Y);
+  if (!isBlocked(state, primary)) {
+    avoidSign = null;
+    return new MoveAction(primary);
+  }
 
-  for (const candidate of candidates) {
-    if (isBlocked(state, candidate)) {
-      logObstacle(from, candidate);
-      continue;
+  logObstacle(from, primary);
+
+  if (avoidSign === null) {
+    const preferredSign = (horizontalPrimary ? Math.sign(dy) : Math.sign(dx)) as 1 | -1 | 0;
+    const signsToTry: (1 | -1)[] = preferredSign !== 0
+      ? [preferredSign, (-preferredSign) as 1 | -1]
+      : [1, -1];
+
+    avoidSign = signsToTry.find((sign) => {
+      const probe = horizontalPrimary
+        ? new Position(from.X, from.Y + sign)
+        : new Position(from.X + sign, from.Y);
+      return !isBlocked(state, probe);
+    }) ?? null;
+  }
+
+  if (avoidSign !== null) {
+    const sidestep = horizontalPrimary
+      ? new Position(from.X, from.Y + avoidSign)
+      : new Position(from.X + avoidSign, from.Y);
+
+    if (!isBlocked(state, sidestep)) {
+      return new MoveAction(sidestep);
     }
-    return new MoveAction(candidate);
+
+    // That side is blocked too (e.g. a corner): drop the lock so the next
+    // tick re-evaluates both sides.
+    logObstacle(from, sidestep);
+    avoidSign = null;
   }
 
   // Fully boxed in as far as we can see: stay put rather than walk into a wall.
