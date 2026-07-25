@@ -1,16 +1,12 @@
 import * as MessageProtocol from "./client/message_protocol";
 import { IBot } from "./bot_logic/ibot";
-import { MoveLeftStrategy } from "./strategies/move_left_strategy";
 import { IStrategy } from "./strategies/strategy";
-import { FetchStrategy } from "./strategies/fetch_strategy";
-import { MoveAction, Position } from "./client/message_protocol";
-import { GoBackToBaseStrategy } from "./strategies/goBackToBaseStrategy";
+import { Orchestrator } from "./strategies/orchestrator";
 
 export class Bot implements IBot {
 	public static readonly TOKEN = "BOTA-KfwG-Fusq-4XbQ";
 
-	// Swap this to try a different strategy (see src/strategies/).
-	private readonly strategy: IStrategy = new FetchStrategy();
+	private readonly strategy: IStrategy = new Orchestrator();
 
 	public getNextAction(
 		state: MessageProtocol.GameState,

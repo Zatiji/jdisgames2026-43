@@ -15,6 +15,27 @@ export function distance(a: Position, b: Position): number {
   return Math.hypot(a.X - b.X, a.Y - b.Y);
 }
 
+function positionKey(position: Position): string {
+  return `${position.X},${position.Y}`;
+}
+
+// Structures (extractors/pumps) are permanent once placed, but VisibleStructures
+// only reports what's *currently* in vision - a structure drops out of the list
+// the moment its tile leaves sight. Remember every position we've ever seen one
+// at so a resource node doesn't look "free" again just because we walked away
+// from it and its extractor scrolled out of view.
+const knownStructurePositions = new Set<string>();
+
+export function rememberVisibleStructures(state: GameState): void {
+  for (const structure of state.VisibleStructures) {
+    knownStructurePositions.add(positionKey(structure.Position));
+  }
+}
+
+export function hasKnownStructureAt(position: Position): boolean {
+  return knownStructurePositions.has(positionKey(position));
+}
+
 export function nearestResource(
   state: GameState,
   predicate: (resource: Resource) => boolean = () => true,
