@@ -2,11 +2,10 @@ import * as MessageProtocol from "./client/message_protocol";
 import { IBot } from "./bot_logic/ibot";
 import { MoveLeftStrategy } from "./strategies/move_left_strategy";
 import { IStrategy } from "./strategies/strategy";
-import {FetchStrategy} from "./strategies/fetch_strategy";
-import {MoveAction, Position} from "./client/message_protocol";
+import { FetchStrategy } from "./strategies/fetch_strategy";
+import { MoveAction, Position } from "./client/message_protocol";
 
 export class Bot implements IBot {
-	// EDIT THIS FOR YOUR OWN BOT TOKEN
 	public static readonly TOKEN = "BOTA-KfwG-Fusq-4XbQ";
 
 	// Swap this to try a different strategy (see src/strategies/).
@@ -17,13 +16,13 @@ export class Bot implements IBot {
 	): MessageProtocol.ActionBase | null {
 		const bot = state.Bot;
 		if (!bot) {
-			console.log("NO BOT")
+			console.log("NO BOT");
 			return null;
 		}
 
 		if (!state.Base) {
-			console.log("NO BASE")
-			console.log(JSON.stringify(state.Base))
+			console.log("NO BASE");
+			console.log(JSON.stringify(state.Base));
 			return null;
 		}
 

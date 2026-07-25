@@ -1,6 +1,6 @@
 import { ActionBase, GameState, MoveAction, Position } from "../client/message_protocol";
 import { IStrategy } from "./strategy";
-import {nearestResource} from "../state/queries";
+import {nearestResource} from "../helpers/queries";
 
 export class OctopussyStrategy implements IStrategy {
     public getNextAction(state: GameState): ActionBase | null {

@@ -1,5 +1,8 @@
-import { ActionBase, GameState, MoveAction, Position } from "../client/message_protocol";
+import { ActionBase, GameState, Position } from "../client/message_protocol";
+import { stepInDirection } from "../helpers/queries";
 import { IStrategy } from "./strategy";
+
+const LEFT = new Position(-1, 0);
 
 export class MoveLeftStrategy implements IStrategy {
   public getNextAction(state: GameState): ActionBase | null {
@@ -8,6 +11,6 @@ export class MoveLeftStrategy implements IStrategy {
       return null;
     }
 
-    return new MoveAction(new Position(bot.Position.X - 1, bot.Position.Y));
+    return stepInDirection(LEFT, bot.Position, state);
   }
 }

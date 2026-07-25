@@ -3,11 +3,9 @@ import {
   DepositToBaseAction,
   GameState,
   GatherNodeAction,
-  MoveAction,
-  Position,
   RespawnAction
 } from "../client/message_protocol";
-import {distance, isInventoryFull, moveTowards, nearestResource} from "../state/queries";
+import {distance, isInventoryFull, moveTowards, nearestResource} from "../helpers/queries";
 import { IStrategy } from "./strategy";
 
 const GATHER_RANGE = 1;
@@ -35,7 +33,7 @@ export class FetchStrategy implements IStrategy {
       }
 
       console.log("MOVING TOWARDS BASE")
-      return new MoveAction(state.Base.Position);
+      return moveTowards(state.Base.Position, bot.Position, state);
     }
 
     // Just go to whichever resource is closest, regardless of whether it
@@ -52,6 +50,6 @@ export class FetchStrategy implements IStrategy {
 
     console.log("MOVING TO RESOURCE")
     console.log("Resource POSITION: ", JSON.stringify(resource.Position));
-    return moveTowards(resource.Position, bot.Position);
+    return moveTowards(resource.Position, bot.Position, state);
   }
 }
